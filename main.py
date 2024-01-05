@@ -68,8 +68,10 @@ async def import_games():
                         if await lichess_api.import_game(pgn):
                             logging.info(f"Imported game {game}")
                             await save_last_imported_file_id(game.id)
+                            await asyncio.sleep(10)
                         else:
                             return
+                            
                     else:
                         return
                 except Exception as e:
