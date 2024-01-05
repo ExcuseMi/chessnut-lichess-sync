@@ -65,7 +65,7 @@ async def get_games(chessnut_login: ChessnutLogin, game_urls, last_game_id: int,
                     pgn_list = data.get('pgnList', [])
                     all_pgns = game_urls if game_urls else []
                     new_pgns = list(
-                        map(lambda p: ChessnutGame(p.get('id'), p.get('pgn')), filter(lambda p: p.get('id'), pgn_list)))
+                        map(lambda p: ChessnutGame(p.get('id'), p.get('pgn')), filter(lambda p: p.get('id') > last_game_id, pgn_list)))
                     all_pgns.extend(new_pgns)
                     if len(new_pgns) == len(pgn_list) and total_pages > page:
                         return await get_games(chessnut_login, all_pgns, last_game_id, page + 1)
