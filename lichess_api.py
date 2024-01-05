@@ -16,6 +16,10 @@ async def import_game(pgn: str):
                 result = await r.json()
                 logging.info(f"Imported game: {result}")
                 return result
+            elif r.status == 400:
+                logging.warning(f"Importing game failed with status code {r.status} but assuming it's just duplicate")
+                return True
+
             else:
                 logging.warning(f"Importing game failed with status code {r.status}")
                 return False
