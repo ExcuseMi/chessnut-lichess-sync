@@ -1,0 +1,10 @@
+accounts:
+  - name: "excuseme"
+    chessnut:
+      email: "xxxx@gmail.com"
+      password: "xxxx"
+    lichess:
+      api_key: "xxxx"
+    interval_minutes: 1
+
+state_dir: "/app/data"  # Will be volume-mounted in Docker

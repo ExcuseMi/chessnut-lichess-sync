@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  chess-importer:
+    build: .
+    container_name: chess_importer
+    restart: unless-stopped
+    environment:
+      - PYTHONUNBUFFERED=1
+      - DOCKER_ENV=true
+    volumes:
+      - ./config.yaml:/app/config.yaml
+      - ./data:/app/data
+      - ./logs:/app/logs
