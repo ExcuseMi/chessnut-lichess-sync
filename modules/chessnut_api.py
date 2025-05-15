@@ -5,6 +5,8 @@ from typing import List, Optional
 
 import aiohttp
 
+from modules.models import ChessnutGame, ChessnutAccount, ChessnutGameReference
+
 LOGIN_URI = "https://api.chessnutech.com/api/login"
 PNG_LIST_URI = "https://api.chessnutech.com/api/getPgnList"
 
@@ -15,13 +17,6 @@ class ChessnutLogin:
         self.user_id = user_id
 
 
-class ChessnutGame:
-    def __init__(self, game_id: int, pgn: str):
-        self.game_id = game_id
-        self.pgn = pgn
-
-    def __repr__(self):
-        return f"ChessnutGame(id={self.game_id}, pgn={self.pgn[:20]}...)" if self.pgn else f"ChessnutGame(id={self.game_id})"
 
 
 def convert_password(password: str) -> str:
@@ -31,20 +26,17 @@ def convert_password(password: str) -> str:
     return h.hexdigest().upper()
 
 
-async def login(email: str, password: str) -> Optional[ChessnutLogin]:
+async def login(chessnut_account: ChessnutAccount) -> Optional[ChessnutLogin]:
     """
     Authenticate with Chessnut API.
 
-    Args:
-        email: Chessnut account email
-        password: Chessnut account password
-
     Returns:
         ChessnutLogin object if successful, None otherwise
+        :param chessnut_account:
     """
-    encrypted_password = convert_password(password)
+    encrypted_password = convert_password(chessnut_account.password)
     form_data = aiohttp.FormData()
-    form_data.add_field("account", email)
+    form_data.add_field("account", chessnut_account.email)
     form_data.add_field("password", encrypted_password)
 
     try:
@@ -73,7 +65,7 @@ async def get_games(
         last_game_id: int,
         page: int = 1,
         session: Optional[aiohttp.ClientSession] = None
-) -> List[ChessnutGame]:
+) -> List[ChessnutGameReference]:
     """
     Fetch games from Chessnut API with pagination support.
 
@@ -109,7 +101,7 @@ async def get_games(
                 total_pages = data.get('total_page', 1)
 
                 current_page_games = [
-                    ChessnutGame(p['id'], p['pgn'])
+                    ChessnutGameReference(id=p['id'], pgn_url=p['pgn'])
                     for p in pgn_list
                     if p['id'] > last_game_id
                 ]
@@ -121,7 +113,7 @@ async def get_games(
                     )
                     current_page_games.extend(next_page_games)
 
-                return current_page_games
+                return sorted(current_page_games, key=lambda l: l.id, reverse=False)
 
         if session:
             return await _fetch(session)
