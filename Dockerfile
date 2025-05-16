@@ -7,16 +7,21 @@ ENV DOCKER_ENV true
 
 WORKDIR /app
 
+# Create and activate virtual environment
+RUN python -m venv /app/.venv
+ENV PATH="/app/.venv/bin:$PATH"
+
 # Install dependencies
 COPY requirements.txt .
 RUN pip install --no-cache-dir --upgrade pip && \
     pip install --no-cache-dir -r requirements.txt
+
+# Create directories
 RUN mkdir -p /app/data
 RUN mkdir -p /app/logs
+RUN touch /app/logs/main.log
+
 # Copy application
 COPY . .
-
-# Create log directory
-RUN touch /app/logs/main.log
 
 CMD ["python", "main.py"]
