@@ -2,13 +2,13 @@ version: '3.8'
 
 services:
   chess-importer:
-    build: .  # Simple build without target
+    build: .
     container_name: chess_importer
     restart: unless-stopped
+    volumes:
+      - ./config.yaml:/app/config.yaml  # if you need to edit config
+      - ./data:/app/data                # persistent data
+      - ./logs:/app/logs                # persistent logs
     environment:
       - PYTHONUNBUFFERED=1
       - DOCKER_ENV=true
-    volumes:
-      - ./config.yaml:/app/config.yaml
-      - ./data:/app/data
-      - ./logs:/app/logs
