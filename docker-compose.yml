@@ -2,10 +2,7 @@ version: '3.8'
 
 services:
   chess-importer:
-    build:
-      context: .
-      # This forces Docker to rebuild every time
-      target: chess_importer
+    build: .  # Simple build without target
     container_name: chess_importer
     restart: unless-stopped
     environment:
