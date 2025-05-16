@@ -1,7 +1,8 @@
 import asyncio
 import logging
+import os
 import sys
-from datetime import datetime
+import datetime
 from logging.handlers import TimedRotatingFileHandler
 from typing import Dict, Optional, List, Union
 
@@ -9,8 +10,7 @@ from modules import chessnut_api, lichess_api
 from modules.account_manager import AccountManager, ImportedGame, AccountConfig
 from modules.lichess_api import LichessGameReference
 from modules.models import ChessnutGameReference, ChessnutGame
-
-
+print("Hello")
 class CustomFormatter(logging.Formatter):
 
     grey = "\x1b[38;20m"
@@ -34,34 +34,16 @@ class CustomFormatter(logging.Formatter):
         return formatter.format(record)
 
 # ----------------------------------------------------------------------
-rootLogger = logging.getLogger()
-rootLogger.setLevel(logging.INFO)
-file_handler = TimedRotatingFileHandler("./logs/main.log",
-                                   when="midnight",
-                                   backupCount=10)
 
 
 def setup_logging():
-    """Configure logging for both Docker and local environments"""
-
+    """Configure logging for Docker (stdout only)"""
     root_logger = logging.getLogger()
     root_logger.setLevel(logging.INFO)
 
-    # Console handler (always output to stdout for Docker)
     console_handler = logging.StreamHandler(sys.stdout)
     console_handler.setFormatter(CustomFormatter())
     root_logger.addHandler(console_handler)
-
-    # File handler only in non-Docker environments
-    file_handler = TimedRotatingFileHandler(
-        "logs/main.log",
-        when="midnight",
-        backupCount=10
-    )
-    file_handler.setFormatter(CustomFormatter())
-    root_logger.addHandler(file_handler)
-
-
 async def import_games_for_account(account: AccountConfig, account_manager: AccountManager):
     account_name = account.name
     imported_games : List[ImportedGame] = await account_manager.get_imported_games(account_name)
@@ -92,11 +74,11 @@ async def import_games_for_account(account: AccountConfig, account_manager: Acco
 
             if isinstance(lichess_game_reference, LichessGameReference):
                 logging.info(f"Imported chessnut_game {chessnut_game_reference.id} for account {account_name} into lichess: lichess game id {lichess_game_reference.id}, lichess url: {lichess_game_reference.url}")
-                imported_game = ImportedGame(chessnut_game=chessnut_game, lichess_game=lichess_game_reference, imported_at=datetime.utcnow())
+                imported_game = ImportedGame(chessnut_game=chessnut_game, lichess_game=lichess_game_reference, imported_at=datetime.datetime.now(datetime.UTC))
                 await account_manager.save_imported_game(account_name, imported_game)
                 await asyncio.sleep(10)
             elif lichess_game_reference:
-                imported_game = ImportedGame(chessnut_game=chessnut_game, lichess_game=None, imported_at=datetime.utcnow(), error=lichess_game_reference)
+                imported_game = ImportedGame(chessnut_game=chessnut_game, lichess_game=None, imported_at=datetime.datetime.now(datetime.UTC), error=lichess_game_reference)
                 await account_manager.save_imported_game(account_name, imported_game)
                 logging.error(f"Failed to import chessnut_game {chessnut_game_reference.id} for account {account_name}")
             else:

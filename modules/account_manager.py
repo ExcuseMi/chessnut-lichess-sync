@@ -15,7 +15,7 @@ class AccountManager:
         self.state_dir.mkdir(parents=True, exist_ok=True)
 
     def _load_config(self, config_path: str) -> AppConfig:
-        with open(config_path) as f:
+        with open(config_path, 'r') as f:
             return AppConfig.model_validate(yaml.safe_load(f))
 
     def get_accounts(self) -> List[AccountConfig]:

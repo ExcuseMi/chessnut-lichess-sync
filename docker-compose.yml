@@ -5,9 +5,13 @@ services:
     build: .
     container_name: chess_importer
     restart: unless-stopped
-    volumes:
-      - .:/app  # Mount current directory
     environment:
       - PYTHONUNBUFFERED=1
       - DOCKER_ENV=true
-      - PATH="/opt/venv/bin:$PATH"  # Ensure venv is used
+    volumes:
+      - chess-data:/data
+    user: "${UID:-1000}:${GID:-1000}"  # Match host user permissions
+
+
+volumes:
+  chess-data:
