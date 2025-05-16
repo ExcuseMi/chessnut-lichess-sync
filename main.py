@@ -1,16 +1,14 @@
 import asyncio
-import logging
-import os
-import sys
 import datetime
-from logging.handlers import TimedRotatingFileHandler
-from typing import Dict, Optional, List, Union
+import logging
+import sys
+from typing import Optional, List, Union
 
 from modules import chessnut_api, lichess_api
 from modules.account_manager import AccountManager, ImportedGame, AccountConfig
 from modules.lichess_api import LichessGameReference
 from modules.models import ChessnutGameReference, ChessnutGame
-print("Hello")
+
 class CustomFormatter(logging.Formatter):
 
     grey = "\x1b[38;20m"
