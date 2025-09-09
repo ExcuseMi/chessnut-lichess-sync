@@ -11,8 +11,8 @@ A Dockerized service that imports chess games from Chess.com to Lichess at regul
 
 1. **Clone the repository**:
    ```bash
-   git clone https://github.com/your-repo/chess-importer.git
-   cd chess-importer
+   git clone https://github.com/ExcuseMi/chessnut-lichess-sync.git
+   cd chessnut-lichess-sync
    ```
 
 2. **Configure the service**:
@@ -25,8 +25,8 @@ A Dockerized service that imports chess games from Chess.com to Lichess at regul
    accounts:
      - name: "your_username"
        chessnut:
-         email: "your_chesscom_email@gmail.com"
-         password: "your_chesscom_password"
+         email: "yourchessnut@email.com"
+         password: "your_chessnut_password"
        lichess:
          api_key: "your_lichess_api_token"
        interval_minutes: 1
@@ -83,8 +83,8 @@ Your data is stored in:
 | Setting | Description |
 |---------|-------------|
 | `accounts[].name` | Friendly name for the account |
-| `accounts[].chessnut.email` | Chess.com login email |
-| `accounts[].chessnut.password` | Chess.com password |
+| `accounts[].chessnut.email` | Chessnut login email |
+| `accounts[].chessnut.password` | Chessnut password |
 | `accounts[].lichess.api_key` | Lichess API token |
 | `accounts[].interval_minutes` | How often to check for new games (minutes) |
 | `state_dir` | Where to store state files (don't change this) |
