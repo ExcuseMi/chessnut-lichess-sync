@@ -1,6 +1,6 @@
-# Chess Importer
+# chessnut-lichess-sync
 
-A Dockerized service that imports chess games from Chess.com to Lichess at regular intervals.
+A Dockerized service that imports chess games from Chessnut to Lichess at regular intervals.
 
 ## Prerequisites
 
@@ -94,9 +94,3 @@ Your data is stored in:
 - **Authentication errors**: Verify your Chess.com credentials and Lichess API token
 - **Container won't start**: Check logs with `docker-compose logs`
 - **Games not importing**: Ensure your Chess.com account has public games or you're using correct credentials
-
-## Security Notes
-
-- Never commit your `config.yaml` to version control
-- The `data/` directory contains sensitive state information
-- Consider using environment variables for production deployment
